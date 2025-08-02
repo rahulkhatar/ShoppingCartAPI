@@ -7,7 +7,7 @@ pool:
 variables:
   dockerRegistryServiceConnection: 'DockerServiceConnection'
   imageRepository: 'rahulk86/shoppingcartimage'
-  dockerfilePath: 'ShoppingCart.API/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: 'latest'
 
 steps:
