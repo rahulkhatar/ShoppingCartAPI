@@ -1,0 +1,19 @@
+trigger:
+- master
+
+pool:
+  name: Default
+
+steps:
+- task: DotNetCoreCLI@2
+  inputs:
+    azureSubscription: 'KeyConnection'
+    command: 'build'
+    projects: '**/*.csproj'
+    arguments: '--output $(Build.BinariesDirectory)/Custom_Output_Folder --configuration Release'
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.BinariesDirectory)/Custom_Output_Folder'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
