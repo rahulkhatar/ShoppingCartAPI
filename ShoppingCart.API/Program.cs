@@ -19,13 +19,13 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbCon")));
+//builder.Services.AddDbContext<ProductDbContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbCon")));
 
-builder.Services.AddMediatRConfiguration();
+//builder.Services.AddMediatRConfiguration();
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ProductService>();
+//builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+//builder.Services.AddScoped<IProductRepository, ProductRepository>();
+//builder.Services.AddScoped<ProductService>();
 
 /*builder.Configuration.AddUserSecrets<Program>();
 var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
@@ -35,16 +35,16 @@ if (!string.IsNullOrEmpty(keyVaultUrl))
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
 }*/
 
-var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
-if (!string.IsNullOrEmpty(keyVaultUrl))
-{
-    var credential = new DefaultAzureCredential();
-    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
-}
+//var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
+//if (!string.IsNullOrEmpty(keyVaultUrl))
+//{
+//    var credential = new DefaultAzureCredential();
+//    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
+//}
 
 var app = builder.Build();
 
-app.UseMiddleware<ExceptionMiddleware>();
+//app.UseMiddleware<ExceptionMiddleware>();
 // Configure the HTTP request pipeline.
 //if (app.Environment.IsDevelopment())
 //{
