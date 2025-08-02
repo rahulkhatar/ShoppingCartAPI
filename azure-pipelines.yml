@@ -5,8 +5,10 @@ pool:
   name: Default
 
 variables:
-  dockerRegistryServiceConnection: 'DockerServiceConnection'
-  imageRepository: 'rahulk86/shoppingcartimage'
+  dockerRegistryServiceConnection: 'DockerServiceConnectionForAzure'
+  acrLoginServer: 'registrycontainername.azurecr.io' 
+  # The image repository name within your ACR
+  imageRepository: 'shoppingcartimage' 
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: 'latest'
 
