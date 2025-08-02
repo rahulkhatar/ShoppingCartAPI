@@ -1,6 +1,7 @@
 using Azure.Identity;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using ShoppingCart.Core;
 using ShoppingCart.Core.Interfaces;
 using ShoppingCart.Core.Middleware;
@@ -26,7 +27,14 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
 
-builder.Configuration.AddUserSecrets<Program>();
+/*builder.Configuration.AddUserSecrets<Program>();
+var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
+if (!string.IsNullOrEmpty(keyVaultUrl))
+{
+    var credential = new DefaultAzureCredential();
+    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
+}*/
+
 var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
 if (!string.IsNullOrEmpty(keyVaultUrl))
 {
