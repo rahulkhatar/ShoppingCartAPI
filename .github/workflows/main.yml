@@ -56,7 +56,7 @@ jobs:
       - name: Upload artifact for deployment
         uses: actions/upload-artifact@v4
         with:
-          name: localizecontainerappgit2
+          name: web-app
           path: ${{ github.workspace }}/app
   
   # The 'deploy' job handles the Continuous Deployment (CD) part of the pipeline.
@@ -69,7 +69,7 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v4
         with:
-          name: localizecontainerappgit2
+          name: web-app
           path: app
 
       # Step 2: Log in to Azure.
@@ -88,5 +88,5 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'YOUR_AZURE_WEB_APP_NAME'
+          app-name: 'localizecontainerappgit2'
           package: './app'
