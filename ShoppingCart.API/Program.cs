@@ -35,12 +35,12 @@ if (!string.IsNullOrEmpty(keyVaultUrl))
     builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
 }*/
 
-//var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
-//if (!string.IsNullOrEmpty(keyVaultUrl))
-//{
-//    var credential = new DefaultAzureCredential();
-//    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
-//}
+var keyVaultUrl = builder.Configuration["KeyVault:KeyVaultUri"];
+if (!string.IsNullOrEmpty(keyVaultUrl))
+{
+    var credential = new DefaultAzureCredential();
+    builder.Configuration.AddAzureKeyVault(new Uri(keyVaultUrl), credential);
+}
 
 var app = builder.Build();
 
