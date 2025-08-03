@@ -1,0 +1,92 @@
+name: .NET Docker CI/CD
+on:
+  push:
+    branches:
+      - main
+      
+env:
+  DOCKER_IMAGE_NAME: 'rahulk86/shoppingcartimage'
+  DOCKER_IMAGE_TAG: 'latest'
+
+jobs:
+  # The 'build-and-push' job handles the Continuous Integration (CI) part of the pipeline.
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Checkout the source code from the repository.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the .NET Core environment.
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+
+      # Step 3: Restore the NuGet packages.
+      - name: Restore NuGet packages
+        run: dotnet restore
+
+      # Step 4: Build the project in Release configuration.
+      # The '--no-restore' flag is used to avoid restoring packages again.
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+
+      # Step 5: Publish the application.
+      # The output is placed in a 'app' folder which will be used for Docker build and deployment.
+      - name: Publish application
+        run: dotnet publish --configuration Release --no-build --output ${{ github.workspace }}/app
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}
+          file: Dockerfile
+
+      # Step 8: Upload the published application as an artifact.
+      # This artifact will be used by the deployment job later in the pipeline.
+      - name: Upload artifact for deployment
+        uses: actions/upload-artifact@v4
+        with:
+          name: localizecontainerappgit2
+          path: ${{ github.workspace }}/app
+  
+  # The 'deploy' job handles the Continuous Deployment (CD) part of the pipeline.
+  # It depends on the 'build-and-push' job successfully completing.
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-and-push
+    steps:
+      # Step 1: Download the artifact that was published in the 'build-and-push' job.
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: localizecontainerappgit2
+          path: app
+
+      # Step 2: Log in to Azure.
+      # This step uses a Service Principal to authenticate with Azure.
+      # The credentials must be stored as a secret named 'AZURE_CREDENTIALS'.
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          allow-no-subscriptions: true
+
+      # Step 3: Deploy the application to an Azure Web App.
+      # The 'package' parameter points to the directory where the artifact was downloaded.
+      # Replace 'YOUR_AZURE_WEB_APP_NAME' with the actual name of your Web App.
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: 'YOUR_AZURE_WEB_APP_NAME'
+          package: './app'
