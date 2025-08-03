@@ -88,5 +88,6 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'localizecontainerappgit2'
-          package: './app'
+          app-name: 'localizecontainerappgit3'
+          # package: './app'
+          images: '${{ env.DOCKER_IMAGE_NAME }}:${{ env.DOCKER_IMAGE_TAG }}'
